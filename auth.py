@@ -1,4 +1,3 @@
-
 from fastapi.security import OAuth2
 from fastapi.security.utils import get_authorization_scheme_param
 from fastapi.openapi.models import OAuthFlows
@@ -16,6 +15,7 @@ USERS_DATABASE = {
     "user_a": {"username": "user_a", "password": "p_a", "role": "admin"},
     "user_b": {"username": "user_b", "password": "password_b", "role": "user"},
 }
+
 
 class OAuth2PasswordBearerWithCookie(OAuth2):
     def __init__(
@@ -45,8 +45,10 @@ class OAuth2PasswordBearerWithCookie(OAuth2):
                 return None
 
         return param
-    
+
+
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="/token")
+
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
@@ -75,28 +77,30 @@ async def get_potential_current_user(request: Request):
             return await get_current_user(token)
     except HTTPException:
         return None
-    
+
     return None
-
-
 
 
 class Token(BaseModel):
     access_token: str
     token_type: str
 
+
 class TokenData(BaseModel):
     username: str | None = None
+
 
 class User(BaseModel):
     username: str
     password: str
     role: str | None = None
 
+
 def get_user(database, username: str) -> User | None:
     user_dict = database.get(username)
     if user_dict:
         return User(**user_dict)
+
 
 def authenticate_user(database, username: str, password: str):
     user = get_user(database, username)
@@ -104,11 +108,11 @@ def authenticate_user(database, username: str, password: str):
         return False
     if password == user.password:
         return user
-    
+
+
 def create_access_token(data: dict, expires_delta: timedelta):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + expires_delta
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return f"Bearer {encoded_jwt}"
-

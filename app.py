@@ -15,7 +15,16 @@ users and sometimes even to users who are not logged in at all.
 from fastapi import FastAPI, status, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
-from auth import get_current_user, Token, ACCESS_TOKEN_EXPIRE_MINUTES, authenticate_user, USERS_DATABASE, create_access_token, User, get_potential_current_user
+from auth import (
+    get_current_user,
+    Token,
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    authenticate_user,
+    USERS_DATABASE,
+    create_access_token,
+    User,
+    get_potential_current_user,
+)
 from typing import Annotated
 from datetime import timedelta
 from fastapi.templating import Jinja2Templates
@@ -26,6 +35,7 @@ templates = Jinja2Templates(
 
 
 app = FastAPI()
+
 
 @app.post("/token", response_model=Token)
 async def login_for_access_token(
@@ -44,10 +54,9 @@ async def login_for_access_token(
     )
 
     new_response = RedirectResponse(url="/", status_code=302)
-    new_response.set_cookie(
-        key="access_token", value=access_token, httponly=True
-    )
+    new_response.set_cookie(key="access_token", value=access_token, httponly=True)
     return new_response
+
 
 @app.get("/login")
 async def login(request: Request):
@@ -67,7 +76,7 @@ async def logout():
 
 
 @app.get("/")
-async def index(request: Request, user: Annotated[User | None, Depends(get_potential_current_user)]):
-    return templates.TemplateResponse(
-        request, "index.html", context=dict(user=user)
-    )
+async def index(
+    request: Request, user: Annotated[User | None, Depends(get_potential_current_user)]
+):
+    return templates.TemplateResponse(request, "index.html", context=dict(user=user))
