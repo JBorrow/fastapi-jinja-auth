@@ -17,7 +17,7 @@ templates = Jinja2Templates(
 
 CLIENT_ID = os.environ.get("GITHUB_CLIENT_ID")
 CLIENT_SECRET = os.environ.get("GITHUB_CLIENT_SECRET")
-MEMBERSHIP_REQUIRED_OF = "simonsobs"
+MEMBERSHIP_REQUIRED_OF = "NOT_A_REAL_ORG"
 
 print(CLIENT_ID)
 print(CLIENT_SECRET)

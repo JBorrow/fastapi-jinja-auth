@@ -12,6 +12,10 @@ move on to `app.py` and its associated `auth.py`.
 The goal of `simpleapp.py` is to introduce the concept of cookies as auth
 tokens, and `app.py` makes this more concrete using JWTs.
 
+There's a third application, `githubapp.py` that uses the GitHub Apps API
+to perform the login flow. That's more advanced and essentially uses a remote
+API to check if you are a member of a given organisation.
+
 References
 ----------
 
